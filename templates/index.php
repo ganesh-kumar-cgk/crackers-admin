@@ -36,7 +36,7 @@
                     <div class="col-md-6 col-xl-3">
                         <div class="card text-center">
                             <div class="mb-2 card-body text-muted">
-                                <h3 class="text-primary mt-2"><?php echo(tdyEstimate()); ?></h3> Today Estimate
+                                <h3 class="text-primary mt-2"><?php echo(totalEstimate()); ?></h3> Total Estimate
                             </div>
                         </div>
                 </div>
@@ -65,7 +65,7 @@
                                         
                                         <tbody>
                                         <?php 
-                                            $lo=latest_order("orders",10);
+                                            $lo=latest_order("orders_2024",10);
                                             while($row=mysqli_fetch_array($lo)){
                                         ?>
                                             <tr>
@@ -79,7 +79,7 @@
                                                     <p class="m-0 text-muted">Contact</p>
                                                 </td>
                                                 <td>
-                                                    <?php echo '₹ '.number_format($row['overall_total'],2) ?>
+                                                    <?php echo '₹ '.number_format($row['grand_total'],2) ?>
                                                     <p class="m-0 text-muted">Amount</p>
                                                 </td>
                                                 <td>
@@ -88,7 +88,7 @@
                                                 </td>
                                                 <td>
                                                     <a type="button"
-                                                        href="invoice-estimate.php?oid=<?php echo urlencode($row['oid']) ?>" class="btn btn-secondary btn-sm waves-effect" target="_blank">View</a>
+                                                        href="invoice-estimate.php?oid=<?php echo urlencode($row['timestamp']) ?>" class="btn btn-secondary btn-sm waves-effect" target="_blank">View</a>
                                                 </td>
                                             </tr>
                                         <?php 

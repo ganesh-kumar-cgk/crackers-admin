@@ -6,7 +6,7 @@
         $id=$_POST['id'];
         $id=str_replace('_', '#', $id);
         $prev="http://localhost/unobi/admin/manageorders.php";
-        $query="Update orders set status='$status' where oid='$id'";
+        $query="Update orders_2024 set status='$status' where timestamp='$id'";
         
         $result=mysqli_query($conn,$query);
         
@@ -23,13 +23,16 @@
     
     function stock_maintain($oid){
         global $conn;
-        $q1="select * from orders where oid='$oid'";
+        $q1="select * from orders_2024 where timestamp='$oid'";
         $r1=mysqli_query($conn,$q1);
         while($ro1=mysqli_fetch_array($r1)){
-            $p_id=$ro1['p_id'];
-            $qty=$ro1['quantity'];
-            $query="UPDATE products SET stock = stock - $qty WHERE id = '$p_id'";
-            $result=mysqli_query($conn,$query);   
+            $items=json_decode($row['order_items'],true);
+            foreach($items as $item){
+                $pid=$item['p_id'];
+                $qty=$item['qty'];
+                $query="UPDATE products SET inventory = inventory - $qty WHERE id = '$pid'";
+                $result=mysqli_query($conn,$query);      
+            }
         }
     }
 ?>

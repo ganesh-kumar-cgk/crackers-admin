@@ -6,16 +6,15 @@
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="author" content="Laralink">
   <!-- Site Title -->
-  <title>General Purpose Invoice-3</title>
+  <title>Estimate</title>
   <link rel="stylesheet" href="assets/invoice/css/style.css">
 </head>
 <body>
     <?php 
         $oid=$_GET['oid'];
         $oid = urldecode($oid);
-        $query="select * from orders where oid='$oid'";
+        $query="select * from orders_2024 where timestamp='$oid'";
         // echo $query;
         $sitequery="select * from sitesettings where id=1";
         $siteresult=mysqli_query($conn,$sitequery);
@@ -32,7 +31,7 @@
     <div class="tm_invoice_wrap">
       <div class="tm_invoice tm_style1 tm_type1" id="tm_download_section">
         <div class="tm_invoice_in">
-          <div class="tm_invoice_head tm_top_head tm_mb15 tm_align_center">
+          <div class="tm_invoice_head tm_top_head tm_align_center">
             <div class="tm_invoice_left">
               <div class="tm_logo"><img src="<?php echo $mainurl ?>images/logo/<?php echo $sitedetails['site_logo'] ?>" alt="Logo"></div>
             </div>
@@ -41,16 +40,16 @@
             </div>
             <div class="tm_shape_bg tm_accent_bg tm_mobile_hide" style="background-color:<?php echo $pdf['color'] ?> !important"></div>
           </div>
-          <div class="tm_invoice_info tm_mb25">
+          <div class="tm_invoice_info">
             <div class="tm_card_note tm_mobile_hide"><b class="tm_primary_color"> </b> </div>
             <div class="tm_invoice_info_list tm_white_color">
-              <p class="tm_invoice_number tm_m0">Invoice No: <b><?php echo $oid ?></b></p>
-              <p class="tm_invoice_date tm_m0">Date: <b><?php echo date('jS F Y',strtotime($details['created_on'])); ?></b></p>
+              <p class="tm_invoice_number tm_m0">Estimate No: <b><?php echo $details['oid'] ?></b></p>
+              <p class="tm_invoice_date tm_m0">Date: <b><?php echo date('jS F Y',strtotime($details['created_at'])); ?></b></p>
             </div>
             <div class="tm_invoice_seperator tm_accent_bg" style="background-color:<?php echo $pdf['color'] ?> !important"></div>
           </div>
           <div class="tm_invoice_head tm_mb10">
-            <div class="tm_invoice_right tm_text_left">
+              <div class="tm_invoice_right tm_text_left">
                   <p class="tm_mb2"><b class="tm_primary_color">Estimate From:</b></p>
                   <p>
                     <?php echo $sitedetails['site_name']?><br>
@@ -69,7 +68,7 @@
           </div>
           <div class="tm_table tm_style1">
             <div class="">
-              <div class="tm_table_responsive">
+              <div class="tm_table_responsive" style="padding-top:20px;">
                 <table>
                   <thead>
                     <tr class="tm_accent_bg" style="background-color:<?php echo $pdf['color'] ?> !important">
@@ -81,23 +80,17 @@
                   </thead>
                   <tbody>
                     <?php 
-                        while($row=mysqli_fetch_array($result)){
-                            if (1==1) {
-                                $name=$row['name'];
-                                $address=$row['address'];
-                                $email=$row['email'];
-                                $address=$row['address'];
-                                $overall_mrp=$row['overall_mrp_total'];
-                                $overall_sp=$row['overall_total'];   
-                            }
+                         $content=mysqli_fetch_assoc($result);
+                         $products=json_decode($content['order_items'],true);
+                         foreach ($products as $product) {
                     ?>
-                    <tr>
-                      <td class="tm_width_3"><?php echo $sno.'.';?><?php echo $row['pname'] ?></td>
-                      <td class="tm_width_2"><?php echo '₹'.number_format($row['mrp'],2); ?></td>
-                      <td class="tm_width_1"><?php echo $row['quantity'] ?></td>
-                      <td class="tm_width_2 tm_text_right"><?php echo '₹'.number_format($row['mrp_total'],2); ?></td>
+                    <tr class="fs-12">
+                      <td class="tm_width_3"><?php echo $sno.'.';?><?php echo $product['productName'] ?></td>
+                      <td class="tm_width_2"><?php echo '₹'.number_format($product['selling_price'],2); ?></td>
+                      <td class="tm_width_1"><?php echo $product['qty'] ?></td>
+                      <td class="tm_width_2 tm_text_right"><?php echo '₹'.number_format($product['selling_total'],2); ?></td>
                     </tr>
-                    <?php $sno++;} ?>
+                    <?php $sno++; } ?>
                   </tbody>
                 </table>
               </div>
@@ -108,15 +101,15 @@
                   <tbody>
                     <tr class="tm_gray_bg ">
                       <td class="tm_width_3 tm_primary_color tm_bold">Subtoal</td>
-                      <td class="tm_width_3 tm_primary_color tm_bold tm_text_right"><?php echo '₹'.number_format($overall_mrp,2) ?></td>
+                      <td class="tm_width_3 tm_primary_color tm_bold tm_text_right"><?php echo '₹'.number_format($details['mrp_total'],2) ?></td>
                     </tr>
                     <tr class="tm_gray_bg">
                       <td class="tm_width_3 tm_primary_color">Discount (<?php echo $details['discount']; ?>%)</td>
-                      <td class="tm_width_3 tm_primary_color tm_bold tm_text_right">-<?php echo '₹'.number_format($overall_mrp-$overall_mrp*($details['discount']/100),2); ?></td>
+                      <td class="tm_width_3 tm_primary_color tm_bold tm_text_right">-<?php echo '₹'.number_format($details['mrp_total']-$details['grand_total'],2); ?></td>
                     </tr>
                     <tr class="tm_accent_bg" style="background-color:<?php echo $pdf['color'] ?> !important">
                       <td class="tm_width_3 tm_border_top_0 tm_bold tm_f16 tm_white_color">Grand Total	</td>
-                      <td class="tm_width_3 tm_border_top_0 tm_bold tm_f16 tm_white_color tm_text_right"><?php echo '₹'.number_format($details['total'],2); ?></td>
+                      <td class="tm_width_3 tm_border_top_0 tm_bold tm_f16 tm_white_color tm_text_right"><?php echo '₹'.number_format($details['grand_total'],2); ?></td>
                     </tr>
                   </tbody>
                 </table>
@@ -125,7 +118,8 @@
           </div>
           <div class="tm_note tm_text_center tm_font_style_normal">
             <hr class="tm_mb15">
-            <p class="tm_m0">Thanks For Estimating.</p>
+            <!--<p class="tm_mb2"><b class="tm_primary_color">Terms & Conditions:</b></p>-->
+            <p class="tm_m0">Thank You For Your Business.</p>
           </div><!-- .tm_note -->
         </div>
       </div>

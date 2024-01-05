@@ -6,9 +6,8 @@
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="author" content="Laralink">
   <!-- Site Title -->
-  <title>General Purpose Invoice-3</title>
+  <title>Estimate</title>
   <link rel="stylesheet" href="assets/invoice/css/style.css">
   <style>
       .fs-12{
@@ -74,7 +73,7 @@
           </div>
           <div class="tm_table tm_style1">
             <div class="">
-              <div class="tm_table_responsive">
+              <div class="tm_table_responsive" style="padding-top:20px;">
                 <table>
                   <thead>
                     <tr class="tm_accent_bg" style="background-color:<?php echo $pdf['color'] ?> !important">

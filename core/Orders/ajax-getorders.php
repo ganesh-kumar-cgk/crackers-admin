@@ -1,5 +1,3 @@
-
-
 <?php
 
 include '../config.php';
@@ -16,49 +14,51 @@ $searchValue = mysqli_real_escape_string($conn,$_POST['search']['value']); // Se
 ## Search 
 $searchQuery = " ";
 if($searchValue != ''){
-   $searchQuery = " and (name like '%".$searchValue."%' or 
-        phone like '%".$searchValue."%' or 
-        address like '%".$searchValue."%' or         
-        overall_total like '%".$searchValue."%' or         
-        created_on like '%".$searchValue."%' or         
-        date like '%".$searchValue."%' or                 
-        oid like '%".$searchValue."%' or                         
-        email like'%".$searchValue."%' ) ";
+  $searchQuery = " AND (
+    name LIKE '%" . $searchValue . "%' OR
+    phone LIKE '%" . $searchValue . "%' OR
+    address LIKE '%" . $searchValue . "%' OR
+    grand_total LIKE '%" . $searchValue . "%' OR
+    created_at LIKE '%" . $searchValue . "%' OR
+    date LIKE '%" . $searchValue . "%' OR
+    oid LIKE '%" . $searchValue . "%' OR
+    email LIKE '%" . $searchValue . "%'
+    )";
 }
 
 ## Total number of records without filtering
-$sel = mysqli_query($conn,"select count(distinct(oid)) as allcount from orders WHERE status !='5'");
+$sel = mysqli_query($conn,"select count(distinct(oid)) as allcount from orders_2024  WHERE status !='5' ");
 $records = mysqli_fetch_assoc($sel);
 $totalRecords = $records['allcount'];
 
 ## Total number of record with filtering
-$sel = mysqli_query($conn,"select count(distinct(oid)) as allcount from orders WHERE status!='5' ".$searchQuery);
+$sel = mysqli_query($conn,"select count(distinct(oid)) as allcount from orders_2024 WHERE status !='5' ".$searchQuery);
 $records = mysqli_fetch_assoc($sel);
 $totalRecordwithFilter = $records['allcount'];
 
 ## Fetch records
-$empQuery = "select DISTINCT oid,date,name,phone,email,address,overall_total,status from orders WHERE status !='5' ".$searchQuery." order by ".'oid'." ".$columnSortOrder." limit ".$row.",".$rowperpage;
+$empQuery = "select DISTINCT oid,date,name,phone,email,address,grand_total,status,timestamp from orders_2024 WHERE status !='5' ".$searchQuery." order by ".'timestamp'." ".$columnSortOrder." limit ".$row.",".$rowperpage;
 $empRecords = mysqli_query($conn, $empQuery);
 $data = array();
 $sno =1;
 while ($row = mysqli_fetch_assoc($empRecords)) {
     $id=$row['oid'];
-    $uid=urlencode($id);
+    $uid=$row['timestamp'];
     $id = str_replace("#","_",$id);
     $st = $row['status'];
     if ($row['status'] == "1") {
-        $stat = "<span class='badge bg-success'>Ordered</span><a class='mx-1' onclick=\"showalert('$id','$st')\" style='cursor:pointer;'><i class='ti-settings'></i></a>";        
+        $stat = "<span class='badge bg-success'>Ordered</span><a class='mx-1' onclick=\"showalert('$uid','$st')\" style='cursor:pointer;'><i class='ti-settings'></i></a>";        
     }
     if ($row['status'] == "2") {
-        $stat = "<span class='badge bg-success'>Pending</span><a class='mx-1' onclick=\"showalert('$id','$st')\" style='cursor:pointer;'><i class='ti-settings'></i></a>";        
+        $stat = "<span class='badge bg-success'>Pending</span><a class='mx-1' onclick=\"showalert('$uid','$st')\" style='cursor:pointer;'><i class='ti-settings'></i></a>";        
     }
     if ($row['status'] == "3") {
-        $stat = "<span class='badge bg-success'>Completed</span><a class='mx-1' onclick=\"showalert('$id','$st')\" style='cursor:pointer;'><i class='ti-settings'></i></a>";        
+        $stat = "<span class='badge bg-success'>Completed</span><a class='mx-1' onclick=\"showalert('$uid','$st')\" style='cursor:pointer;'><i class='ti-settings'></i></a>";        
     }
     if ($row['status'] == "4") {
-        $stat = "<span class='badge bg-success'>Cancel</span><a class='mx-1' onclick=\"showalert('$id','$st')\" style='cursor:pointer;'><i class='ti-settings'></i></a>";        
+        $stat = "<span class='badge bg-success'>Cancel</span><a class='mx-1' onclick=\"showalert('$uid','$st')\" style='cursor:pointer;'><i class='ti-settings'></i></a>";        
     }    
-    $oid=$row['oid'];
+    $oid=$row['timestamp'];
     $data[] = array( 
       "Sno"=>$sno++,
       "OrderId"=>$row['oid'],
@@ -66,7 +66,7 @@ while ($row = mysqli_fetch_assoc($empRecords)) {
       "Phone"=>$row['phone'],
       "Email"=>$row['email'],
       "Address"=>$row['address'],
-      "Total"=>$row['overall_total'],
+      "Total"=>number_format($row['grand_total'],2),
       "Status"=>$stat,
       "Action" => '<td>
                         <a href="invoice-estimate.php?oid=' . $uid . '" target="_blank"><i class="fa fa-eye text-primary"></i></a>

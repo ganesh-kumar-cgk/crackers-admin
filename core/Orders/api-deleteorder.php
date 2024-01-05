@@ -4,7 +4,7 @@
     
     function deleteorder($id){
         global $conn;
-        $query="update orders set status='5' where oid='$id'";
+        $query="update orders_2024 set status='5' where timestamp='$id'";
         // echo $query;
         $result=mysqli_query($conn,$query);
         if(!$result){

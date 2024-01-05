@@ -112,7 +112,7 @@ $site_offer=$sitedetails['site_discount'];
     <body>
         <section class='topbar d-flex justify-content-between align-items-center bg-secondary'>
             <div class='logo__container'>
-                <img src='https://refreshtechlabs.com/unobiTech/Unobi/images/logo/<?php echo $logo ?>' class='logo'>
+                <img src='../../../images/logo/<?php echo $logo ?>' class='logo'>
                 </div>
             <div class='shop_title'>
                 <label class='text-primary'><?php echo $site_name ?></label>

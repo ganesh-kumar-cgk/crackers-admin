@@ -6,10 +6,18 @@ $date = date('Y-m-d');
 function tdyEstimate(){
     global $conn;
     global $date;
-    $query = "SELECT count(distinct(oid)) as count FROM orders WHERE date LIKE '$date%'";
+    $query = "SELECT count(*) as count FROM orders_2024 WHERE date LIKE '$date%'";
     $result = mysqli_query($conn,$query);
     $row = mysqli_fetch_array($result);
     return $row['count'];
+}
+function totalEstimate(){
+    global $conn;
+    global $date;
+    $query = "SELECT count(*) as count FROM orders_2024";
+    $result = mysqli_query($conn,$query);
+    $row = mysqli_fetch_array($result);
+    return $row['count'];    
 }
 function tdyGiftbox(){
     global $conn;
