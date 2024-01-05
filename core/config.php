@@ -5,8 +5,8 @@
         $hostname="localhost";
         $username="u399040897_fireflycracker";
         $password="firefly@Crackers.1234";
-        $siteurl="https://fireflycrackers.com/demo/ff-admin/";
-        $mainurl="https://fireflycrackers.com/demo/";
+        $siteurl="https://fireflycrackers.com/firefly-admin";
+        $mainurl="https://fireflycrackers.com/";
         $conn = mysqli_connect($hostname, $username, $password, $dbname);
         if(!$conn){
             echo "Failed To Conect:";
