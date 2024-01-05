@@ -12,4 +12,16 @@
             echo "Failed To Conect:";
         }
     }
+    if($_SERVER['HTTP_HOST'] == "divinecrackers.com"){
+        $dbname="u399040897_divinecrackers";
+        $hostname="localhost";
+        $username="u399040897_divinecrackers";
+        $password="divine@Crackers.123";
+        $siteurl="https://divinecrackers.com/divine-admin-panel/";
+        $mainurl="https://divinecrackers.com/";
+        $conn = mysqli_connect($hostname, $username, $password, $dbname);
+        if(!$conn){
+            echo "Failed To Conect:";
+        }        
+    }
 ?>
