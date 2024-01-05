@@ -12,10 +12,10 @@
             $_SESSION['user']=$row['id'];
             $_SESSION['USER']=$row['email'];
             $_SESSION['USER_STATUS']=$row['is_superuser'];
-            echo "<script>location.href='/demo/ff-admin/';</script>";
+            echo "<script>location.href='../../index.php';</script>";
         }else{
             $_SESSION['error']='Invalid Credentials';
-            echo "<script>location.href='/demo/ff-admin/login.php';</script>";
+            echo "<script>location.href='../../login.php';</script>";
         }
     }
     if($_SERVER['REQUEST_METHOD']=='POST'){
